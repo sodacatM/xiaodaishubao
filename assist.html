@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>小袋鼠保｜参保帮手</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --yellow: #f7c948;
+      --yellow-deep: #f4b400;
+      --yellow-soft: #fff7dc;
+      --dark: #1f2329;
+      --text: #2c3138;
+      --muted: #6b7280;
+      --line: #ece5d0;
+      --bg: #fffaf0;
+      --card: #ffffff;
+      --shadow: 0 14px 34px rgba(36, 33, 18, 0.08);
+      --radius: 22px;
+    }
+
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      background: linear-gradient(180deg, #fffaf0 0%, #fff7e8 100%);
+      color: var(--text);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: min(1220px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,252,244,0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .topbar-inner {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      color: #161b22;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--yellow), var(--yellow-deep));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 10px 24px rgba(244, 180, 0, 0.24);
+    }
+
+    .nav {
+      display: flex;
+      gap: 24px;
+      color: #4b5563;
+      font-size: 15px;
+    }
+
+    .nav a:hover { color: #111827; }
+
+    .home-link,
+    .pricing-link {
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .home-link {
+      background: #fff7dc;
+      border: 1px solid #eedb9d;
+      color: #5c4b12;
+    }
+
+    .pricing-link {
+      background: var(--dark);
+      color: #fff;
+    }
+
+    .page-head {
+      padding: 34px 0 18px;
+    }
+
+    .head-wrap {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .head-intro,
+    .head-side,
+    .path-panel,
+    .flow-panel,
+    .apps-panel,
+    .faq-panel,
+    .note-panel {
+      background: rgba(255,255,255,0.92);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .head-intro {
+      padding: 28px;
+      background: linear-gradient(180deg, #fff8e6 0%, #fff3c8 100%);
+      border: 1px solid #efdfae;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #fffdf6;
+      border: 1px solid #ecdca9;
+      color: #5f4b12;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .head-intro h1 {
+      margin: 0 0 12px;
+      font-size: clamp(30px, 5vw, 46px);
+      line-height: 1.18;
+      color: #1b2128;
+    }
+
+    .head-intro p {
+      margin: 0;
+      color: #5f6774;
+      font-size: 15px;
+      line-height: 1.95;
+    }
+
+    .head-side {
+      padding: 0;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+    }
+
+    .side-block {
+      padding: 22px 24px;
+      position: relative;
+    }
+
+    .side-block:first-child {
+      background: linear-gradient(135deg, #ffd95e 0%, #f7c948 100%);
+    }
+
+    .side-block:last-child {
+      background: #fff;
+      border-top: 1px solid var(--line);
+    }
+
+    .side-block h3 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      color: #171b21;
+    }
+
+    .side-block p {
+      margin: 0;
+      color: #5f6774;
+      font-size: 14px;
+      line-height: 1.9;
+      max-width: 88%;
+    }
+
+    .side-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .side-chip-row span {
+      padding: 9px 12px;
+      background: rgba(255,255,255,0.36);
+      border: 1px solid rgba(255,255,255,0.45);
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #45370c;
+    }
+
+    .section {
+      padding: 8px 0 26px;
+    }
+
+    .section-head {
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      color: #141920;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    .path-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .path-nav,
+    .path-panel,
+    .flow-panel,
+    .apps-panel,
+    .faq-panel,
+    .note-panel {
+      padding: 24px;
+    }
+
+    .path-nav {
+      background: #1f2329;
+      color: #fff;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 96px;
+    }
+
+    .path-nav h3 {
+      margin: 0 0 12px;
+      font-size: 22px;
+    }
+
+    .path-nav p {
+      margin: 0 0 18px;
+      color: rgba(255,255,255,0.74);
+      font-size: 14px;
+      line-height: 1.9;
+    }
+
+    .anchor-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .anchor-list a {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .anchor-list a:hover {
+      background: rgba(255,255,255,0.14);
+    }
+
+    .path-panel h3,
+    .flow-panel h3,
+    .apps-panel h3,
+    .note-panel h3,
+    .faq-panel h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      color: #161b22;
+    }
+
+    .subline {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.9;
+    }
+
+    .step-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .step-item {
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: #fffdf7;
+      border: 1px solid #ece3ca;
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .step-num {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--yellow-soft);
+      color: #775800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .step-item h4,
+    .faq-item h4,
+    .app-row h4 {
+      margin: 0 0 6px;
+      font-size: 17px;
+      color: #111827;
+    }
+
+    .step-item p,
+    .faq-item p,
+    .app-row p,
+    .note-panel p,
+    .path-panel p,
+    .flow-panel p,
+    .apps-panel p,
+    .faq-panel p {
+      margin: 0;
+      color: #66707e;
+      font-size: 14px;
+      line-height: 1.9;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 22px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--dark);
+      color: #fff;
+    }
+
+    .btn-light {
+      background: #fff7db;
+      color: #5c4b12;
+      border: 1px solid #eedb9d;
+    }
+
+    .flow-wrap {
+      display: grid;
+      grid-template-columns: 1fr 120px 1fr 120px 1fr;
+      gap: 10px;
+      align-items: center;
+      margin-top: 18px;
+    }
+
+    .flow-box {
+      padding: 18px;
+      border-radius: 18px;
+      background: #fffdf7;
+      border: 1px solid #ece3ca;
+      min-height: 124px;
+    }
+
+    .flow-box strong {
+      display: block;
+      font-size: 18px;
+      color: #161b22;
+      margin-bottom: 8px;
+    }
+
+    .flow-box span {
+      color: #66707e;
+      font-size: 14px;
+      line-height: 1.85;
+    }
+
+    .flow-arrow {
+      text-align: center;
+      font-size: 22px;
+      color: #b99219;
+      font-weight: 800;
+    }
+
+    .apps-list,
+    .faq-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .app-row,
+    .faq-item {
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: #fffdf7;
+      border: 1px solid #ece3ca;
+    }
+
+    .app-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .app-meta span {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #fff7df;
+      border: 1px solid #efdfae;
+      color: #6c5312;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .note-panel {
+      margin-top: 22px;
+      background: linear-gradient(180deg, #fffdf7 0%, #fff8e8 100%);
+    }
+
+    .footer {
+      padding: 34px 0 42px;
+      text-align: center;
+      color: #78808c;
+      font-size: 14px;
+    }
+
+    @media (max-width: 1100px) {
+      .head-wrap,
+      .path-layout,
+      .flow-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-arrow {
+        transform: rotate(90deg);
+      }
+
+      .path-nav {
+        position: static;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .nav { display: none; }
+      .container { width: min(1220px, calc(100% - 24px)); }
+      .head-intro,
+      .head-side,
+      .path-panel,
+      .flow-panel,
+      .apps-panel,
+      .faq-panel,
+      .note-panel,
+      .path-nav { border-radius: 20px; }
+      .head-intro p,
+      .side-block p { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <div class="brand-logo">袋</div>
+        <div>
+          <div>小袋鼠保</div>
+          <div style="font-size:12px;color:#7a808b;font-weight:500;">参保帮手页面</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#path">双入口</a>
+        <a href="#guide">流程指引</a>
+        <a href="#apps">平台入口</a>
+        <a href="#faq">常见问题</a>
+      </nav>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <a href="index.html" class="home-link">返回首页</a>
+        <a href="pricing.html" class="pricing-link">返回保费测算</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="page-head">
+      <div class="head-wrap">
+        <div class="head-intro">
+          <div class="eyebrow">参保帮手窗口 · 分流承接页</div>
+          <h1>把“看完建议”继续变成“完成下一步动作”</h1>
+          <p>
+            参保帮手为你提供两条清晰路径：想补充商业保障，就走“我要买保险”；想了解社保怎么交、去哪里办，就走“教我交社保”。不绕弯，直接把下一步做成可执行的清单。
+          </p>
+        </div>
+
+        <div class="head-side">
+          <div class="side-block">
+            <h3>一页两路</h3>
+            <p>一条路径对接保司方案沟通，一条路径承接社保办理流程与平台入口说明。</p>
+            <div class="side-chip-row">
+              <span>我要买保险</span>
+              <span>教我交社保</span>
+              <span>平台入口</span>
+            </div>
+          </div>
+          <div class="side-block">
+            <h3>这一页能帮你什么</h3>
+            <p>把建议变成行动：给出下一步要做什么、去哪里办、需要准备什么材料。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="path">
+      <div class="section-head">
+        <h2>双入口路径</h2>
+        <p>页面左侧保留总导航，右侧分开呈现两条动作路径，避免把“买保险”和“交社保”混在一起。</p>
+      </div>
+
+      <div class="path-layout">
+        <aside class="path-nav">
+          <h3>参保帮手</h3>
+          <p>快速跳转到你需要的内容。</p>
+          <div class="anchor-list">
+            <a href="#path">双入口路径</a>
+            <a href="#guide">社保办理流程</a>
+            <a href="#apps">平台入口说明</a>
+            <a href="#faq">常见问题</a>
+          </div>
+        </aside>
+
+        <div class="path-panel">
+          <h3>我要买保险</h3>
+          <p class="subline">适合已经看过建议保费、希望和保险公司进一步沟通方案的骑手。页面重点是对接保障方案，而不是重复解释社保概念。</p>
+          <div class="step-list">
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div>
+                <h4>查看建议保费结果</h4>
+                <p>先回到保费方案设计页，明确自己当前建议保费区间和推荐保障侧重点。</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div>
+                <h4>选择推荐套餐方向</h4>
+                <p>根据班次、配送模式、天气和里程等因素，初步判断更适合哪类保障组合。</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div>
+                <h4>联系保司顾问</h4>
+                <p>将页面建议结果作为沟通参考，与保司进一步确认保额、价格和保障范围。</p>
+              </div>
+            </div>
+          </div>
+          <div class="btn-row">
+            <a href="pricing.html" class="btn btn-primary">返回建议保费页</a>
+            <a href="chat.html" class="btn btn-light">咨询智能客服</a>
+          </div>
+        </div>
+
+        <div class="path-panel">
+          <h3>教我交社保</h3>
+          <p class="subline">适合想把社保办明白、把入口找对的骑手。先看流程，再选平台，再按步骤准备材料办理。</p>
+          <div class="step-list">
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div>
+                <h4>看流程</h4>
+                <p>先确认自己当前要办理的是哪类事项，理解整体路径后再去点具体入口。</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div>
+                <h4>选平台</h4>
+                <p>根据事项不同，进入医保、公积金、税务或地方社保平台，减少找入口的时间成本。</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div>
+                <h4>按说明办理</h4>
+                <p>按平台提示完成实名认证、申报与缴费，并留存办理记录，方便日后查询与补缴。</p>
+              </div>
+            </div>
+          </div>
+          <div class="btn-row">
+            <a href="#guide" class="btn btn-primary">查看流程指引</a>
+            <a href="#apps" class="btn btn-light">查看平台入口</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-panel">
+        <h3>你可以怎么选</h3>
+        <p>如果你更关心“今天跑单风险怎么兜底”，建议先走“我要买保险”；如果你更关心“长期保障与连续缴费”，建议走“教我交社保”。两条路径不冲突，可以按自己的情况分步完成。</p>
+      </div>
+    </section>
+
+    <section class="section" id="guide">
+      <div class="section-head">
+        <h2>社保办理流程指引</h2>
+        <p>用 3 步把流程讲清楚：确认事项 → 进入平台 → 完成办理。</p>
+      </div>
+
+      <div class="flow-panel">
+        <h3>流程总览</h3>
+        <div class="flow-wrap">
+          <div class="flow-box">
+            <strong>确认事项</strong>
+            <span>先区分是社保缴纳、医保、公积金还是税务相关事项。</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">
+            <strong>进入平台</strong>
+            <span>根据事项进入对应平台，不同办理内容对应不同入口。</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">
+            <strong>完成办理</strong>
+            <span>实名认证、提交材料、查看状态，按平台要求完成实际操作。</span>
+          </div>
+        </div>
+
+        <div class="step-list">
+          <div class="step-item">
+            <div class="step-num">A</div>
+            <div>
+              <h4>准备材料</h4>
+              <p>常见需要：身份证信息、参保地信息、银行卡/支付方式、手机号；部分城市可能需要居住/就业相关证明，以平台要求为准。</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">B</div>
+            <div>
+              <h4>办理要点</h4>
+              <p>建议优先关注缴费基数与档位、是否允许灵活就业参保、断缴影响与补缴情形；办理完成后记得保存回执或截图。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="apps">
+      <div class="section-head">
+        <h2>平台入口说明</h2>
+        <p>不同事项对应不同平台入口。建议优先使用官方 App/小程序或政务服务平台办理。</p>
+      </div>
+
+      <div class="apps-panel">
+        <h3>常用平台</h3>
+        <div class="apps-list">
+          <div class="app-row">
+            <h4>掌上社保通</h4>
+            <p>适合作为地方社保服务统一入口，承接社保查询、缴纳和状态跟踪等事项。</p>
+            <div class="app-meta"><span>查询</span><span>缴纳</span><span>状态跟踪</span></div>
+          </div>
+          <div class="app-row">
+            <h4>国家医保服务平台</h4>
+            <p>承接医保查询、电子凭证、报销相关说明和办理事项，适合作为医保类独立入口。</p>
+            <div class="app-meta"><span>医保</span><span>电子凭证</span><span>报销查询</span></div>
+          </div>
+          <div class="app-row">
+            <h4>个人所得税</h4>
+            <p>适合作为税务相关记录查询和个人信息辅助核验入口，方便形成完整办理链路。</p>
+            <div class="app-meta"><span>税务</span><span>信息核验</span><span>记录查询</span></div>
+          </div>
+          <div class="app-row">
+            <h4>北京公积金</h4>
+            <p>可承接公积金账户查询、信息查看和办理说明，适合作为单独入口卡片展示。</p>
+            <div class="app-meta"><span>公积金</span><span>账户查询</span><span>办理说明</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="section-head">
+        <h2>常见问题</h2>
+        <p>这一页保留常见问题，但排版改成纵向问答块，不再与之前页面使用相同的多卡片均分样式。</p>
+      </div>
+
+      <div class="faq-panel">
+        <h3>高频问题</h3>
+        <div class="faq-list">
+          <div class="faq-item">
+            <h4>为什么要拆成两个入口</h4>
+            <p>因为“买保险”和“交社保”属于两类不同动作。前者偏商业保障方案对接，后者偏平台办理流程，不适合混在一个入口中。</p>
+          </div>
+          <div class="faq-item">
+            <h4>为什么这里不直接接真实平台</h4>
+            <p>各地入口与路径可能不同，且会随政策调整。我们建议以你所在城市的官方政务平台与“国家医保服务平台”等官方渠道为准。</p>
+          </div>
+          <div class="faq-item">
+            <h4>如果我只想继续看保费结果怎么办</h4>
+            <p>可以直接返回保费测算页，继续查看建议保费和推荐方案，不必先留在参保帮手页面。</p>
+          </div>
+          <div class="faq-item">
+            <h4>智能客服应该放在哪</h4>
+            <p>你可以在本页点击“咨询智能客服”快速提问，适合问清材料、流程与注意事项；需要进一步测算时，再返回保费测算页。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    小袋鼠保参保帮手 · 买保险与交社保两条路径一站式指引
+  </footer>
+</body>
+</html>
